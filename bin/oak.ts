@@ -6,12 +6,10 @@ import { ServiceStack } from '../lib/service-stack'
 
 const app = new cdk.App()
 
-const integrationsStack = new IntegrationsStack(app, 'IntegrationsStack', {})
+const { pokemonLambda } = new IntegrationsStack(app, 'IntegrationsStack', {})
 
-const bedrockStack = new BedrockStack(app, 'BedrockStack', {
-  integrationsStack,
+const { alias } = new BedrockStack(app, 'BedrockStack', {
+  pokemonLambda,
 })
 
-new ServiceStack(app, 'ServiceStack', {
-  agentAlias: bedrockStack.alias,
-})
+new ServiceStack(app, 'ServiceStack', { agentAlias: alias })

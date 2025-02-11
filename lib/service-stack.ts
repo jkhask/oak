@@ -29,7 +29,6 @@ export class ServiceStack extends cdk.Stack {
         },
         bundling: {
           sourceMap: true,
-          format: nodejs.OutputFormat.ESM,
           environment: { NODE_ENV: 'production' },
           externalModules: ['@aws-sdk/client-bedrock-agent-runtime'],
         },

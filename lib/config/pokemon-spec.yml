@@ -1,0 +1,277 @@
+openapi: 3.0.0
+info:
+  title: Pokemon API
+  description: API for retrieving Pokemon information
+  version: 1.0.0
+
+paths:
+  /pokemon:
+    get:
+      description: Get all Pokemon
+      operationId: getAllPokemon
+      responses:
+        200:
+          description: Successful Pokemon retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    url:
+                      type: string
+
+  /pokemon/{name}:
+    get:
+      description: Get Pokemon by name
+      operationId: getPokemonByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The Pokemon name, all lower-case
+      responses:
+        200:
+          description: Successful Pokemon retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pokemon'
+components:
+  schemas:
+    Pokemon:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        base_experience:
+          type: integer
+        height:
+          type: integer
+        is_default:
+          type: boolean
+        order:
+          type: integer
+        weight:
+          type: integer
+        abilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ability'
+        forms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Form'
+        game_indices:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameIndex'
+        held_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeldItem'
+        location_area_encounters:
+          type: string
+        moves:
+          type: array
+          items:
+            $ref: '#/components/schemas/Move'
+        species:
+          $ref: '#/components/schemas/Species'
+        sprites:
+          $ref: '#/components/schemas/Sprites'
+        cries:
+          $ref: '#/components/schemas/Cries'
+        stats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stat'
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+        past_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/PastType'
+
+    Ability:
+      type: object
+      properties:
+        is_hidden:
+          type: boolean
+        slot:
+          type: integer
+        ability:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+
+    Form:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+
+    GameIndex:
+      type: object
+      properties:
+        game_index:
+          type: integer
+        version:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+
+    HeldItem:
+      type: object
+      properties:
+        item:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+        version_details:
+          type: array
+          items:
+            type: object
+            properties:
+              rarity:
+                type: integer
+              version:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  url:
+                    type: string
+
+    Move:
+      type: object
+      properties:
+        move:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+        version_group_details:
+          type: array
+          items:
+            type: object
+            properties:
+              level_learned_at:
+                type: integer
+              version_group:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  url:
+                    type: string
+              move_learn_method:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  url:
+                    type: string
+
+    Species:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+
+    Sprites:
+      type: object
+      properties:
+        back_default:
+          type: string
+        back_female:
+          type: string
+          nullable: true
+        back_shiny:
+          type: string
+        front_default:
+          type: string
+        front_female:
+          type: string
+          nullable: true
+        front_shiny:
+          type: string
+        other:
+          type: object
+        versions:
+          type: object
+
+    Cries:
+      type: object
+      properties:
+        latest:
+          type: string
+        legacy:
+          type: string
+
+    Stat:
+      type: object
+      properties:
+        base_stat:
+          type: integer
+        effort:
+          type: integer
+        stat:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+
+    Type:
+      type: object
+      properties:
+        slot:
+          type: integer
+        type:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+
+    PastType:
+      type: object
+      properties:
+        generation:
+          type: object
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'

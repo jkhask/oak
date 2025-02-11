@@ -1,12 +1,12 @@
 import { bedrock } from '@cdklabs/generative-ai-cdk-constructs'
 import * as cdk from 'aws-cdk-lib'
+import * as nodejs from 'aws-cdk-lib/aws-lambda-nodejs'
 import { Construct } from 'constructs'
-import { DOWNSTREAM_SPEC } from './config/downstream-spec'
-import { MOON_INSTRUCTION } from './config/moon-instruction'
-import { IntegrationsStack } from './integrations-stack'
+import * as path from 'path'
+import { OAK_INSTRUCTION } from './config/oak-instruction'
 
 interface BedrockStackProps extends cdk.StackProps {
-  integrationsStack: IntegrationsStack
+  pokemonLambda: nodejs.NodejsFunction
 }
 
 export class BedrockStack extends cdk.Stack {
@@ -21,27 +21,38 @@ export class BedrockStack extends cdk.Stack {
       model: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_SONNET_V2_0,
     })
 
-    const downstreamActionGroup = new bedrock.AgentActionGroup({
-      name: 'downstream-actions',
+    const pokemonActionGroup = new bedrock.AgentActionGroup({
+      name: 'pokemon-actions',
       executor: bedrock.ActionGroupExecutor.fromlambdaFunction(
-        props.integrationsStack.downstreamIntegrationsLambda
+        props.pokemonLambda
       ),
       enabled: true,
-      apiSchema: bedrock.ApiSchema.fromInline(DOWNSTREAM_SPEC),
+      apiSchema: bedrock.ApiSchema.fromLocalAsset(
+        path.join(__dirname, 'config/pokemon-spec.yml')
+      ),
     })
 
-    this.agent = new bedrock.Agent(this, 'Moon', {
-      name: 'moon',
+    this.agent = new bedrock.Agent(this, 'Oak', {
+      name: 'oak',
       foundationModel: cris,
       description:
-        'An agent that trades stocks based on the latest market data',
-      instruction: MOON_INSTRUCTION,
-      actionGroups: [downstreamActionGroup],
+        'The Pokemon Professor, who specializes in the study of Pokemon',
+      instruction: OAK_INSTRUCTION,
+      actionGroups: [pokemonActionGroup],
     })
 
-    this.alias = new bedrock.AgentAlias(this, 'MoonAlias', {
+    this.alias = new bedrock.AgentAlias(this, 'OakAlias', {
       agent: this.agent,
       description: `Latest alias: ${new Date().toISOString()}`,
+    })
+
+    new cdk.CfnOutput(this, 'AgentAliasId', {
+      value: this.alias.aliasId,
+      exportName: 'agentAliasId',
+    })
+    new cdk.CfnOutput(this, 'AgentId', {
+      value: this.agent.agentId,
+      exportName: 'agentId',
     })
   }
 }

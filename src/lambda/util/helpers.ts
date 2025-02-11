@@ -1,5 +1,5 @@
-import { AgentRequestEvent } from '../interfaces/AgentRequestEvent'
-import { DownstreamResponse } from '../interfaces/DownstreamResponse'
+import { AgentRequestEvent } from '../types/AgentRequestEvent'
+import { DownstreamResponse } from '../types/DownstreamResponse'
 
 export const buildResponseObject = <T>(
   event: AgentRequestEvent,

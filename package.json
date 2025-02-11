@@ -18,6 +18,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "22.7.9",
     "aws-cdk": "2.177.0",
+    "axios": "^1.7.9",
     "eslint": "^9.19.0",
     "jest": "^29.7.0",
     "prettier": "^3.4.2",
@@ -27,7 +28,7 @@
     "typescript-eslint": "^8.22.0"
   },
   "dependencies": {
-    "@cdklabs/generative-ai-cdk-constructs": "^0.1.290",
+    "@cdklabs/generative-ai-cdk-constructs": "^0.1.292",
     "aws-cdk-lib": "2.177.0",
     "constructs": "^10.0.0"
   }
