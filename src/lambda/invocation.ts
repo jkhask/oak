@@ -29,8 +29,6 @@ export const handler = async (
     let completion = ''
     const response = await client.send(command)
 
-    console.log('Response:', response)
-
     if (response.completion === undefined) {
       throw new Error('Completion is undefined')
     }

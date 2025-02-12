@@ -1,7 +1,5 @@
 import { bedrock } from '@cdklabs/generative-ai-cdk-constructs'
 import * as cdk from 'aws-cdk-lib'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as nodejs from 'aws-cdk-lib/aws-lambda-nodejs'
 import { Construct } from 'constructs'
 import * as path from 'path'
@@ -11,7 +9,7 @@ interface BedrockStackProps extends cdk.StackProps {
 }
 
 export class BedrockStack extends cdk.Stack {
-  invocationLambda: nodejs.NodejsFunction
+  alias: bedrock.AgentAlias
 
   constructor(
     scope: Construct,
@@ -47,34 +45,9 @@ export class BedrockStack extends cdk.Stack {
       actionGroups: [pokemonActionGroup],
     })
 
-    const alias = new bedrock.AgentAlias(this, 'OakAlias', {
+    this.alias = new bedrock.AgentAlias(this, 'OakAlias', {
       agent,
       description: new Date().toISOString(),
     })
-
-    this.invocationLambda = new nodejs.NodejsFunction(
-      this,
-      'InvocationLambda',
-      {
-        runtime: lambda.Runtime.NODEJS_22_X,
-        entry: path.join(__dirname, '../src/lambda/invocation.ts'),
-        timeout: cdk.Duration.seconds(60),
-        environment: {
-          AGENT_ALIAS_ID: alias.aliasId,
-          AGENT_ID: alias.agent.agentId,
-        },
-        bundling: {
-          sourceMap: true,
-          environment: { NODE_ENV: 'production' },
-          externalModules: ['@aws-sdk/client-bedrock-agent-runtime'],
-        },
-      }
-    )
-
-    this.invocationLambda.role?.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName(
-        'AmazonBedrockFullAccess'
-      )
-    )
   }
 }

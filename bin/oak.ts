@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib'
-import { ApiStack } from '../lib/api-stack'
 import { BedrockStack } from '../lib/bedrock-stack'
 import { IntegrationsStack } from '../lib/integrations-stack'
+import { OrchestrationStack } from '../lib/orchestration-stack'
 
 const APP_NAME = 'Oak'
 
@@ -14,12 +14,10 @@ const { pokemonLambda } = new IntegrationsStack(
   {}
 )
 
-const { invocationLambda } = new BedrockStack(
-  app,
-  `${APP_NAME}-BedrockStack`,
-  {
-    pokemonLambda,
-  }
-)
+const { alias } = new BedrockStack(app, `${APP_NAME}-BedrockStack`, {
+  pokemonLambda,
+})
 
-new ApiStack(app, `${APP_NAME}-ApiStack`, { invocationLambda })
+new OrchestrationStack(app, `${APP_NAME}-OrchestrationStack`, {
+  alias,
+})
