@@ -10,17 +10,21 @@ export class IntegrationsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props)
 
-    this.pokemonLambda = new nodejs.NodejsFunction(this, 'pokemonLambda', {
-      architecture: lambda.Architecture.ARM_64,
-      runtime: lambda.Runtime.NODEJS_22_X,
-      entry: path.join(__dirname, '../src/lambda/pokemon.ts'),
-      bundling: {
-        sourceMap: true,
-      },
-      currentVersionOptions: {
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
-        retryAttempts: 1,
-      },
-    })
+    this.pokemonLambda = new nodejs.NodejsFunction(
+      this,
+      'pokemonLambda',
+      {
+        architecture: lambda.Architecture.ARM_64,
+        runtime: lambda.Runtime.NODEJS_22_X,
+        entry: path.join(__dirname, '../src/lambda/pokemon.ts'),
+        bundling: {
+          sourceMap: true,
+        },
+        currentVersionOptions: {
+          removalPolicy: cdk.RemovalPolicy.DESTROY,
+          retryAttempts: 1,
+        },
+      }
+    )
   }
 }
