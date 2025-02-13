@@ -1,51 +1,77 @@
 import {
+  ApiGatewayManagementApiClient,
+  PostToConnectionCommand,
+} from '@aws-sdk/client-apigatewaymanagementapi'
+import {
   BedrockAgentRuntimeClient,
   InvokeAgentCommand,
 } from '@aws-sdk/client-bedrock-agent-runtime'
 import { APIGatewayProxyWebsocketEventV2 } from 'aws-lambda'
 
-export const handler = async (
-  event: APIGatewayProxyWebsocketEventV2
-) => {
+const agentId = process.env.AGENT_ID
+const agentAliasId = process.env.AGENT_ALIAS_ID
+const wsEndpoint = process.env.WS_ENDPOINT
+
+const agentClient = new BedrockAgentRuntimeClient()
+const wsClient = new ApiGatewayManagementApiClient({
+  endpoint: wsEndpoint?.replace('wss://', 'https://'),
+})
+
+export const handler = async (event: APIGatewayProxyWebsocketEventV2) => {
   console.log('APIGatewayProxyWebsocketEventV2:', event)
+
+  const { requestContext, body } = event
+  const { connectionId } = requestContext
+  const parsedBody = JSON.parse(body || '{}')
+  const { sessionId, prompt } = parsedBody
+
   try {
-    const client = new BedrockAgentRuntimeClient()
-
-    const agentId = process.env.AGENT_ID
-    const agentAliasId = process.env.AGENT_ALIAS_ID
-
-    const { body } = event
-    const parsedBody = JSON.parse(body || '{}')
-    const { sessionId, prompt } = parsedBody
-
     const command = new InvokeAgentCommand({
       agentId,
       agentAliasId,
       sessionId,
       enableTrace: true,
       inputText: prompt,
+      streamingConfigurations: {
+        streamFinalResponse: true,
+        applyGuardrailInterval: 1000,
+      },
     })
 
-    let completion = ''
-    const response = await client.send(command)
+    const response = await agentClient.send(command)
 
     if (response.completion === undefined) {
       throw new Error('Completion is undefined')
     }
 
     for await (const chunkEvent of response.completion) {
-      const chunk = chunkEvent.chunk
-      const trace = chunkEvent.trace
-      console.log('Trace:', JSON.stringify(trace))
-      const decodedResponse = new TextDecoder('utf-8').decode(
-        chunk?.bytes
-      )
-      completion += decodedResponse
+      const { chunk, trace } = chunkEvent
+      const rationale = trace?.trace?.orchestrationTrace?.rationale?.text
+      if (rationale) {
+        console.log('Trace rationale:', JSON.stringify(rationale))
+      }
+      if (chunk?.bytes) {
+        const text = new TextDecoder('utf-8').decode(chunk.bytes)
+        console.log('Received chunk:', text)
+        const command = new PostToConnectionCommand({
+          ConnectionId: connectionId,
+          Data: text,
+        })
+        await wsClient.send(command)
+      }
     }
 
-    return { statusCode: 200, body: JSON.stringify(completion) }
+    return { statusCode: 200, body: 'completed' }
   } catch (err) {
     console.error(err)
-    return { status: 500, error: 'Error invoking agent' }
+    if (err instanceof Error) {
+      const command = new PostToConnectionCommand({
+        ConnectionId: connectionId,
+        Data: err.message,
+      })
+      await wsClient.send(command)
+    }
+
+    return { statusCode: 500, body: 'Error invoking agent' }
   }
 }
