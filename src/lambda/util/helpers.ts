@@ -1,11 +1,10 @@
-import { AgentRequestEvent } from '../types/AgentRequestEvent'
-import { DownstreamResponse } from '../types/DownstreamResponse'
+import { AgentRequest, AgentResponse } from '../types/events'
 
 export const buildResponseObject = <T>(
-  event: AgentRequestEvent,
+  event: AgentRequest,
   status: number,
   body: T
-): DownstreamResponse => ({
+): AgentResponse => ({
   messageVersion: '1.0',
   response: {
     actionGroup: event.actionGroup,

@@ -1,14 +1,24 @@
-# Welcome to your CDK TypeScript project
+# Bedrock Agent with CDK
 
-This is a blank project for CDK development with TypeScript.
+This is a POC project that demonstrates how to quickly set up agentic architecture using the CDK.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Installation Instructions
 
-## Useful commands
+We assume you have the aws cli setup and configured for your aws account.
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+- `npm i` Install dependencies
+- `npx cdk bootstrap` Bootstrap the environment
+
+## Deployment Instructions
+
+1. `npx cdk deploy Oak-BedrockStack` deploy the IntegrationsStack and BedrockStack (BedrockStack depends on IntegrationsStack)
+2. `npx cdk deploy Oak-OrchestrationStack` deploy the OrchestrationStack
+
+From then on, you only need to deploy specific stacks depending on where you make changes.
+
+## Usage
+
+The deployment of OrchestrationStack should output a websocket api endpoint.
+You can hit the websocket api however you'd like (Postman, wscat, etc.).
+It is setup to receive messages in the following format:
+`{"action": "invoke-agent", "sessionId": "abc", "prompt":"Hi, who are you?"}`
