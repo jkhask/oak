@@ -11,10 +11,13 @@ We assume you have the aws cli setup and configured for your aws account.
 
 ## Deployment Instructions
 
-1. `npx cdk deploy Oak-BedrockStack` deploy the IntegrationsStack and BedrockStack (BedrockStack depends on IntegrationsStack)
-2. `npx cdk deploy Oak-OrchestrationStack` deploy the OrchestrationStack
+1. `npm run deploy:all` deploy all stacks
 
 From then on, you only need to deploy specific stacks depending on where you make changes.
+
+- `npm run deploy:integration`
+- `npm run deploy:bedrock`
+- `npm run deploy:orchestration`
 
 ## Usage
 
