@@ -34,7 +34,6 @@ export const handler = async (event: APIGatewayProxyWebsocketEventV2) => {
       inputText: prompt,
       streamingConfigurations: {
         streamFinalResponse: true,
-        applyGuardrailInterval: 1000,
       },
     })
 
