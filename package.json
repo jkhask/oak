@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-apigatewaymanagementapi": "^3.744.0",
-    "@aws-sdk/client-bedrock-agent-runtime": "^3.741.0",
+    "@aws-sdk/client-bedrock-agent-runtime": "^3.747.0",
     "@eslint/js": "^9.19.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/aws-lambda": "^8.10.147",
