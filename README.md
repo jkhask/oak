@@ -24,4 +24,4 @@ From then on, you only need to deploy specific stacks depending on where you mak
 The deployment of OrchestrationStack should output a websocket api endpoint.
 You can hit the websocket api however you'd like (Postman, wscat, etc.).
 It is setup to receive messages in the following format:
-`{"action": "invoke-agent", "sessionId": "abc", "prompt":"Hi, who are you?"}`
+`{"action": "invoke-agent", "sessionId": "abc", "prompt":"Hi"}`

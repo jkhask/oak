@@ -20,7 +20,7 @@ export class BedrockStack extends cdk.Stack {
 
     const cris = bedrock.CrossRegionInferenceProfile.fromConfig({
       geoRegion: bedrock.CrossRegionInferenceProfileRegion.US,
-      model: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_SONNET_V2_0,
+      model: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_HAIKU_V1_0,
     })
 
     const pokemonActionGroup = new bedrock.AgentActionGroup({
@@ -46,7 +46,6 @@ export class BedrockStack extends cdk.Stack {
 
     const alias = new bedrock.AgentAlias(this, 'OakAlias', {
       agent,
-      description: new Date().toISOString(),
     })
 
     // Place the IDs of the agent and alias in SSM parameters

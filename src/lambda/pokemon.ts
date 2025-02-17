@@ -11,7 +11,9 @@ export const handler = async (event: AgentRequest): Promise<AgentResponse> => {
     switch (event.apiPath) {
       case '/pokemon': {
         const { data } = await axios.get(`${endpoint}/pokemon/?limit=151`)
-        return buildResponseObject(event, 200, data)
+        const resp = buildResponseObject(event, 200, data)
+        console.log('Response:', resp)
+        return resp
       }
       case `/pokemon/{name}`: {
         const pokemonName = event.parameters[0].value
@@ -19,7 +21,7 @@ export const handler = async (event: AgentRequest): Promise<AgentResponse> => {
         const { id, name, height, weight, types, abilities, stats } = data
         // Max lambda response size the agent can accept is 25kB
         // We are only returning some of the large response
-        return buildResponseObject(event, 200, {
+        const resp = buildResponseObject(event, 200, {
           id,
           name,
           height,
@@ -28,6 +30,8 @@ export const handler = async (event: AgentRequest): Promise<AgentResponse> => {
           abilities,
           stats,
         })
+        console.log('Response:', resp)
+        return resp
       }
       default: {
         return buildResponseObject(event, 404, {

@@ -12,7 +12,8 @@
     "deploy:integration": "cdk deploy Oak-IntegrationsStack --require-approval never",
     "deploy:bedrock": "cdk deploy Oak-BedrockStack --require-approval never",
     "deploy:orchestration": "cdk deploy Oak-OrchestrationStack --require-approval never",
-    "deploy:all": "npm run deploy:bedrock && npm run deploy:orchestration"
+    "deploy:all": "npm run deploy:bedrock && npm run deploy:orchestration",
+    "destroy:all": "cdk destroy --all"
   },
   "devDependencies": {
     "@aws-sdk/client-apigatewaymanagementapi": "^3.744.0",

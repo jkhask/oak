@@ -45,9 +45,8 @@ export const handler = async (event: APIGatewayProxyWebsocketEventV2) => {
 
     for await (const chunkEvent of response.completion) {
       const { chunk, trace } = chunkEvent
-      const rationale = trace?.trace?.orchestrationTrace?.rationale?.text
-      if (rationale) {
-        console.log('Trace rationale:', JSON.stringify(rationale))
+      if (trace) {
+        console.log('Trace:', JSON.stringify(trace))
       }
       if (chunk?.bytes) {
         const text = new TextDecoder('utf-8').decode(chunk.bytes)
