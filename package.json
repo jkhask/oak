@@ -34,7 +34,7 @@
     "typescript-eslint": "^8.22.0"
   },
   "dependencies": {
-    "@cdklabs/generative-ai-cdk-constructs": "file:generative-ai-cdk-constructs@0.0.0.jsii.tgz",
+    "@cdklabs/generative-ai-cdk-constructs": "0.1.293",
     "aws-cdk-lib": "2.178.1",
     "constructs": "^10.0.0"
   }
