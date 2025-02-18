@@ -18,6 +18,7 @@ export class BedrockStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: BedrockStackProps) {
     super(scope, id, props)
 
+    //Use this as the agent foundationalModel for models that support CRIS
     const cris = bedrock.CrossRegionInferenceProfile.fromConfig({
       geoRegion: bedrock.CrossRegionInferenceProfileRegion.US,
       model: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_HAIKU_V1_0,
@@ -35,13 +36,13 @@ export class BedrockStack extends cdk.Stack {
     })
 
     const agent = new bedrock.Agent(this, 'Oak', {
-      name: 'oak',
       foundationModel: cris,
+      name: 'oak',
       description:
         'The Pokemon Professor, who specializes in the study of Pokemon',
       instruction: OAK_INSTRUCTION,
-      actionGroups: [pokemonActionGroup],
       userInputEnabled: true,
+      actionGroups: [pokemonActionGroup],
     })
 
     const alias = new bedrock.AgentAlias(this, 'OakAlias', {

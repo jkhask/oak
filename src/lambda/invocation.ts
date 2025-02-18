@@ -45,7 +45,11 @@ export const handler = async (event: APIGatewayProxyWebsocketEventV2) => {
 
     for await (const chunkEvent of response.completion) {
       const { chunk, trace } = chunkEvent
-      if (trace) {
+      // Only logging traces for rational and action group invocation for now
+      if (
+        trace?.trace?.orchestrationTrace?.rationale ||
+        trace?.trace?.orchestrationTrace?.invocationInput
+      ) {
         console.log('Trace:', JSON.stringify(trace))
       }
       if (chunk?.bytes) {

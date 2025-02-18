@@ -12,7 +12,7 @@ export const handler = async (event: AgentRequest): Promise<AgentResponse> => {
       case '/pokemon': {
         const { data } = await axios.get(`${endpoint}/pokemon/?limit=151`)
         const resp = buildResponseObject(event, 200, data)
-        console.log('Response:', resp)
+        console.log('Response:', JSON.stringify(resp))
         return resp
       }
       case `/pokemon/{name}`: {
@@ -30,7 +30,7 @@ export const handler = async (event: AgentRequest): Promise<AgentResponse> => {
           abilities,
           stats,
         })
-        console.log('Response:', resp)
+        console.log('Response:', JSON.stringify(resp))
         return resp
       }
       default: {
